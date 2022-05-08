@@ -1,10 +1,10 @@
 import App from '@/app';
-// import { AuthController } from '@controllers/auth.controller';
-// import { IndexController } from '@controllers/index.controller';
-// import { UsersController } from '@controllers/users.controller';
-// import validateEnv from '@utils/validateEnv';
+import validateEnv from '@utils/validateEnv';
+import { AuthController } from '@controllers/auth.controller';
+import { IndexController } from '@controllers/index.controller';
+import { UsersController } from '@controllers/users.controller';
 
-// validateEnv();
+validateEnv();
 
-const app = new App([]);
+const app = new App([IndexController, AuthController, UsersController]);
 app.listen();

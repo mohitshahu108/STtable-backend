@@ -1,43 +1,107 @@
-import express, { Application, Request, Response } from 'express';
+// import 'reflect-metadata';
+import express from 'express';
+import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
+// import { defaultMetadataStorage } from 'class-transformer/cjs';
+// import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
+// import compression from 'compression';
+// import cookieParser from 'cookie-parser';
+// import helmet from 'helmet';
+// import hpp from 'hpp';
+// import morgan from 'morgan';
+// import { useExpressServer, getMetadataArgsStorage } from 'routing-controllers';
+// import { routingControllersToSpec } from 'routing-controllers-openapi';
+// import swaggerUi from 'swagger-ui-express';
+// import errorMiddleware from '@middlewares/error.middleware';
+// import { logger, stream } from '@utils/logger';
 
-const app: Application = express()
+class App {
+  public app!: express.Application;
+  public env!: string;
+  public port!: string | number;
 
-const port: number = 3001
+  constructor(Controllers: Function[]) {
+    this.app = express();
+    this.env = NODE_ENV || 'development';
+    this.port = PORT || 3000;
 
-app.get('/toto', (req: Request, res: Response) => {
-    res.send('Hello toto')
-})
+    // this.initializeMiddlewares();
+    // this.initializeRoutes(Controllers);
+    // this.initializeSwagger(Controllers);
+    // this.initializeErrorHandling();
+  }
 
-app.listen(port, function () {
-    console.log(`App is listening on port ${port} !`)
-})
+  public listen() {
+    this.app.listen(this.port, () => {
+      // logger.info(`=================================`);
+      // logger.info(`======= ENV: ${this.env} =======`);
+      // logger.info(`🚀 App listening on the port ${this.port}`);
+      // logger.info(`=================================`);
+      console.log(`=================================`);
+      console.log(`======= ENV: ${this.env} =======`);
+      console.log(`🚀 App listening on the port ${this.port}`);
+      console.log(`=================================`);
+    });
+  }
 
-/**
- * project/
-  controllers/
-    users.js
-  util/
-    plugin.js
-  middlewares/
-    auth.js
-  models/
-    user.js
-  routes/
-    user.js
-    router.js
-  public/
-    js/
-    css/
-    img/
-  views/
-    users/
-      index.jade
-  tests/
-    users/
-      create-user-test.js 
-      update-user-test.js
-      get-user-test.js
-  .gitignore
-  app.js
-  package.json
- */
+  //   public getServer() {
+  //     return this.app;
+  //   }
+
+  //   private initializeMiddlewares() {
+  //     this.app.use(morgan(LOG_FORMAT, { stream }));
+  //     this.app.use(hpp());
+  //     this.app.use(helmet());
+  //     this.app.use(compression());
+  //     this.app.use(express.json());
+  //     this.app.use(express.urlencoded({ extended: true }));
+  //     this.app.use(cookieParser());
+  //   }
+
+  //   private initializeRoutes(controllers: Function[]) {
+  //     useExpressServer(this.app, {
+  //       cors: {
+  //         origin: ORIGIN,
+  //         credentials: CREDENTIALS,
+  //       },
+  //       controllers: controllers,
+  //       defaultErrorHandler: false,
+  //     });
+  //   }
+
+  //   private initializeSwagger(controllers: Function[]) {
+  //     const schemas = validationMetadatasToSchemas({
+  //       classTransformerMetadataStorage: defaultMetadataStorage,
+  //       refPointerPrefix: '#/components/schemas/',
+  //     });
+
+  //     const routingControllersOptions = {
+  //       controllers: controllers,
+  //     };
+
+  //     const storage = getMetadataArgsStorage();
+  //     const spec = routingControllersToSpec(storage, routingControllersOptions, {
+  //       components: {
+  //         schemas,
+  //         securitySchemes: {
+  //           basicAuth: {
+  //             scheme: 'basic',
+  //             type: 'http',
+  //           },
+  //         },
+  //       },
+  //       info: {
+  //         description: 'Generated with `routing-controllers-openapi`',
+  //         title: 'A sample API',
+  //         version: '1.0.0',
+  //       },
+  //     });
+
+  //     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(spec));
+  //   }
+
+  //   private initializeErrorHandling() {
+  //     this.app.use(errorMiddleware);
+  //   }
+}
+
+export default App;

@@ -13,6 +13,7 @@ import { routingControllersToSpec } from 'routing-controllers-openapi';
 import swaggerUi from 'swagger-ui-express';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+import { Sequelize } from 'sequelize';
 
 class App {
   public app!: express.Application;
@@ -24,6 +25,7 @@ class App {
     this.env = NODE_ENV || 'development';
     this.port = PORT || 3000;
 
+    this.initializeDataBaseConnection();
     this.initializeMiddlewares();
     this.initializeRoutes(Controllers);
     this.initializeSwagger(Controllers);
@@ -105,6 +107,20 @@ class App {
 
   private initializeErrorHandling() {
     this.app.use(errorMiddleware);
+  }
+
+  private async initializeDataBaseConnection() {
+    const { DB_NAME, DB_USER_NAME, DB_PASSWORD, DB_HOST } = process.env;
+    const sequelize = new Sequelize(DB_NAME, DB_USER_NAME, DB_PASSWORD, {
+      host: DB_HOST,
+      dialect: 'mysql',
+    });
+    try {
+      await sequelize.authenticate();
+      logger.info('Connection has been established successfully.');
+    } catch (error) {
+      logger.error('Unable to connect to the database:', error);
+    }
   }
 }
 
